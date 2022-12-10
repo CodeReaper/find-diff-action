@@ -16,4 +16,4 @@ export MOCKED_GIT_DIFF=' .devcontainer/Dockerfile             |  4 ++++
 
 $1 >/dev/null
 
-cat $GITHUB_OUTPUT
+cat "$GITHUB_OUTPUT"

@@ -50,14 +50,17 @@ runs:
         MAXDEPTH: ${{ inputs.maximumDepth }}
         REGEX: ${{ inputs.exclusionRegex }}
       run: |
+        # script:
+
         [ -d ".git" ] || { printf '::error title=.git not found.::Did you forget to check out?\n'; exit 1; }
         case "$GITHUB_EVENT_NAME" in
           pull_request|pull_request_target)
             git fetch origin "$GITHUB_BASE_REF" "$GITHUB_HEAD_REF"
-            DIFF="$(git diff --stat=10000 "$GITHUB_BASE_REF")"
+            DIFF=$(git diff --stat=10000 "$GITHUB_BASE_REF")
             ;;
           push)
-            DIFF="$(git show --stat=10000 --pretty=oneline \""$GITHUB_REF"\")"
+            git fetch origin "$GITHUB_REF"
+            DIFF=$(git show --stat=10000 --pretty=oneline "$GITHUB_REF")
             ;;
           workflow_dispatch)
             # DEFAULT=$(git config init.defaultBranch)

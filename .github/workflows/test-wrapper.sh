@@ -16,13 +16,13 @@ exit 0
 EOF
 chmod +x $BIN/git
 
-export PATH=$BIN:$PATH
+export PATH="$BIN:$PATH"
 
-export GITHUB_OUTPUT=$LOG/output
+export GITHUB_OUTPUT="$LOG/output"
 
 export PATHS=\*
 export TYPE=both
 
-sh $1 $2
+sh "$1" "$2"
 
 rm -rf "$BIN" "$LOG"
