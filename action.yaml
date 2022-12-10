@@ -1,0 +1,92 @@
+name: Find diff
+description: |
+  Finds and compares two commits and outputs lists with the differences.
+
+branding:
+  icon: git-pull-request
+  color: gray-dark
+
+inputs:
+  paths:
+    description: Path(s) to limit the search to. Space separated list. Defaults to git root.
+    default: "*"
+
+  type:
+    description: Types to search for. Defaults to both files and directories.
+    type: choice
+    options:
+      - files
+      - directories
+      - both
+    default: both
+
+  minimumDepth:
+    description: Matches requires this depth to be included.
+
+  maximumDepth:
+    description: Matches requires less or equal to this depth to be included.
+
+  exclusionRegex:
+    description: Regex(s) to exclude matches found. Semicolon separated regexs. Defaults to excluding nothing.
+
+outputs:
+  pattern:
+    description: A egrep-style pattern consisting of all matches
+    value: ${{ steps.diff.outputs.pattern }}
+  list:
+    description: A list of all matches
+    value: ${{ steps.diff.outputs.list }}
+
+runs:
+  using: composite
+  steps:
+    - name: Find diff
+      id: diff
+      shell: bash
+      env:
+        PATHS: ${{ inputs.paths }}
+        TYPE: ${{ inputs.type }}
+        MINDEPTH: ${{ inputs.minimumDepth }}
+        MAXDEPTH: ${{ inputs.maximumDepth }}
+        REGEX: ${{ inputs.exclusionRegex }}
+      run: |
+        [ -d ".git" ] || { printf '::error title=.git not found.::Did you forget to check out?\n'; exit 1; }
+        case "$GITHUB_EVENT_NAME" in
+          pull_request|pull_request_target)
+            git fetch origin "$GITHUB_BASE_REF" "$GITHUB_HEAD_REF"
+            DIFF="$(git diff --stat=10000 "$GITHUB_BASE_REF")"
+            ;;
+          push)
+            DIFF="$(git show --stat=10000 --pretty=oneline \""$GITHUB_REF"\")"
+            ;;
+          workflow_dispatch)
+            # DEFAULT=$(git config init.defaultBranch)
+            exit 2
+            ;;
+          *)
+            printf '::error title=Invalid event::Event %s is not supported.\n' "$GITHUB_EVENT_NAME"
+            exit 1
+            ;;
+        esac
+
+        FIND="find $PATHS "
+        if [ -n "$MINDEPTH" ]; then
+          FIND=$FIND"-mindepth $((MINDEPTH)) "
+        fi
+        if [ -n "$MAXDEPTH" ]; then
+          FIND=$FIND"-maxdepth $((MAXDEPTH)) "
+        fi
+        if [ "$TYPE" = "files" ]; then
+          FIND=$FIND"-type f "
+        elif [ "$TYPE" = "directories" ]; then
+          FIND=$FIND"-type d "
+        fi
+        FIND=$FIND"! -path \"./.git/*\" "
+
+        SEARCH=$(sh -c "$FIND -exec printf '^%s|' {} \;" | sed 's/|$//g')
+
+        LIST=$(printf '%s' "$DIFF" | grep '|' | sed 's/^ *//g' | grep -oE "$SEARCH" | sort -u)
+        PATTERN=$(printf '%s' "$LIST" | xargs -r printf '^%s|' | sed 's/|$//g')
+
+        printf "list=%s\n" "${LIST//$'\n'/'%0A'}" >> "$GITHUB_OUTPUT"
+        printf "pattern=%s\n" "$PATTERN" >> "$GITHUB_OUTPUT"

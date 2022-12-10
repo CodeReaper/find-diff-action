@@ -1,0 +1,28 @@
+name: Run
+
+on:
+  workflow_dispatch: {}
+  pull_request: {}
+  push:
+    branches:
+      - main
+
+jobs:
+  run:
+    name: Run action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Env
+        shell: bash
+        run: |
+          env
+
+      - uses: actions/checkout@v3
+
+      - uses: CodeReaper/find-diff-action@main
+        id: run
+
+      - shell: bash
+        run: |
+          printf 'Pattern:\n${{ steps.run.outputs.pattern }}\n'
+          printf 'List:\n${{ steps.run.outputs.list }}\n'
