@@ -91,5 +91,5 @@ runs:
         LIST=$(printf '%s' "$DIFF" | grep '|' | sed 's/^ *//g' | grep -oE "$SEARCH" | sort -u)
         PATTERN=$(printf '%s' "$LIST" | xargs -r printf '^%s|' | sed 's/|$//g')
 
-        printf "list=%s\n" "${LIST//$'\n'/'%0A'}" >> "$GITHUB_OUTPUT"
+        printf "list=%s\n" "${LIST//$'\n'/'%0A'}" >> "$GITHUB_OUTPUT" # FIXME: %0A as a new line does not work
         printf "pattern=%s\n" "$PATTERN" >> "$GITHUB_OUTPUT"
