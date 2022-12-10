@@ -14,6 +14,6 @@ export MOCKED_GIT_DIFF=' .devcontainer/Dockerfile             |  4 ++++
  12 files changed, 266 insertions(+), 1 deletion(-)
 '
 
-$1 >/dev/null
+sh "$1" >/dev/null
 
 cat "$GITHUB_OUTPUT"
