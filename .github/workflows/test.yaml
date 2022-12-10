@@ -27,7 +27,7 @@ jobs:
           mv run.sh .github/workflows
           cd .github/workflows
 
-          find tests -name "*.sh" -type f -exec sh -c 'printf "Test %s:\n" "$(basename $1 ".sh")"; sh test-wrapper.sh "$1" run.sh' -- {} \;
+          find tests -name "*.sh" -type f -exec sh -c 'printf "Test %s:\n" "$(basename $1 ".sh")"; sh test-wrapper.sh "$1" ../run.sh' -- {} \;
 
   shellcheck:
     name: Shellcheck
