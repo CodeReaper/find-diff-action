@@ -27,4 +27,4 @@ jobs:
         run: |
           # Outputs:
           printf 'Pattern:\n${{ steps.run.outputs.pattern }}\n'
-          printf 'List:\n${{ steps.run.outputs.list }}\n'
+          printf '\nList:\n---\n${{ steps.run.outputs.list }}\n'

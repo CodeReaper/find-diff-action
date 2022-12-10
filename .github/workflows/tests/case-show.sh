@@ -8,4 +8,4 @@ export MOCKED_GIT_DIFF='e01d0b4c792d72cc96107b20b024db628fbc354d (HEAD -> main, 
 
 sh "$1" >/dev/null
 
-cat "$GITHUB_OUTPUT"
+cat "$GITHUB_OUTPUT" # FIXME: actual asserts and more tests
