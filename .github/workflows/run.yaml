@@ -22,7 +22,9 @@ jobs:
       - uses: CodeReaper/find-diff-action@main
         id: run
 
-      - shell: bash
+      - name: Outputs
+        shell: bash
         run: |
+          # Outputs:
           printf 'Pattern:\n${{ steps.run.outputs.pattern }}\n'
           printf 'List:\n${{ steps.run.outputs.list }}\n'

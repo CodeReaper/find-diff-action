@@ -55,11 +55,11 @@ runs:
         [ -d ".git" ] || { printf '::error title=.git not found.::Did you forget to check out?\n'; exit 1; }
         case "$GITHUB_EVENT_NAME" in
           pull_request|pull_request_target)
-            git fetch origin "$GITHUB_BASE_REF" "$GITHUB_HEAD_REF"
+            git fetch origin "$GITHUB_BASE_REF" "$GITHUB_HEAD_REF" 2> /dev/null
             DIFF=$(git diff --stat=10000 "$GITHUB_BASE_REF")
             ;;
           push)
-            git fetch origin "$GITHUB_REF"
+            git fetch origin "$GITHUB_REF" 2> /dev/null
             DIFF=$(git show --stat=10000 --pretty=oneline "$GITHUB_REF")
             ;;
           workflow_dispatch)

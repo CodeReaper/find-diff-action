@@ -27,6 +27,13 @@ jobs:
           mv run.sh .github/workflows
           cd .github/workflows
 
+          echo first
+          find .
+
+          echo second
+          find tests -name "*.sh" -type f
+
+          echo third
           find tests -name "*.sh" -type f -exec printf 'Test %s' "{}"; sh test-wrapper.sh {} run.sh \;
 
   shellcheck:
