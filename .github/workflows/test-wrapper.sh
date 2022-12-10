@@ -19,6 +19,7 @@ chmod +x $BIN/git
 export PATH="$BIN:$PATH"
 
 export GITHUB_OUTPUT="$LOG/output"
+touch "$GITHUB_OUTPUT"
 
 export PATHS=\*
 export TYPE=both

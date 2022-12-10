@@ -14,20 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Prepare action for testing
+      - name: Run each test
         shell: bash
         run: |
           printf '#!/bin/bash\n' > run.sh
           yq '.runs[].0.run' < action.yaml >> run.sh
           chmod +x run.sh
 
-      - name: Run each test
-        shell: bash
-        run: |
-          mv run.sh .github/workflows
-          cd .github/workflows
-
-          find tests -name "*.sh" -type f -exec sh -c 'printf "Test %s:\n" "$(basename $1 ".sh")"; sh test-wrapper.sh "$1" ../run.sh' -- {} \;
+          find .github/workflows/tests -name "*.sh" -type f -exec sh -c 'printf "Test %s:\n" "$(basename $1 ".sh")"; sh .github/workflows/test-wrapper.sh "$1" run.sh' -- {} \;
 
   shellcheck:
     name: Shellcheck
