@@ -65,7 +65,7 @@ runs:
             DIFF=$(git show --stat=10000 --pretty=oneline "$GITHUB_REF")
             ;;
           workflow_dispatch)
-            DEFAULT=$(git config init.defaultBranch)
+            DEFAULT=$(jq -r '.repository.default_branch' "$GITHUB_EVENT_PATH")
             if [ "$DEFAULT" = "$GITHUB_REF_NAME" ]; then
               git fetch origin "$GITHUB_REF" 2> /dev/null
               DIFF=$(git show --stat=10000 --pretty=oneline "$GITHUB_REF")
