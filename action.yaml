@@ -54,7 +54,7 @@ runs:
 
         [ -d ".git" ] || { printf '::error title=.git not found.::Did you forget to check out?\n'; exit 1; }
         case "$GITHUB_EVENT_NAME" in
-          pull_request|pull_request_target)  # FIXME: test PR in real life
+          pull_request|pull_request_target)
             git fetch origin "$GITHUB_BASE_REF" "$GITHUB_HEAD_REF" 2> /dev/null
             DIFF=$(git diff --stat=10000 "$GITHUB_BASE_REF")
             ;;
@@ -63,8 +63,14 @@ runs:
             DIFF=$(git show --stat=10000 --pretty=oneline "$GITHUB_REF")
             ;;
           workflow_dispatch)
-            # DEFAULT=$(git config init.defaultBranch) # FIXME: handle dispatch
-            exit 2
+            DEFAULT=$(git config init.defaultBranch)
+            if [ "$DEFAULT" = "$GITHUB_REF_NAME" ]; then
+              git fetch origin "$GITHUB_REF" 2> /dev/null
+              DIFF=$(git show --stat=10000 --pretty=oneline "$GITHUB_REF")
+            else
+              git fetch origin "$DEFAULT" "$GITHUB_REF" 2> /dev/null
+              DIFF=$(git diff --stat=10000 "$GITHUB_REF")
+            fi
             ;;
           *)
             printf '::error title=Invalid event::Event %s is not supported.\n' "$GITHUB_EVENT_NAME"

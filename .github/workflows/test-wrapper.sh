@@ -11,6 +11,8 @@ if [ "\$1" = "diff" ]; then
     printf "\$MOCKED_GIT_DIFF"
 elif [ "\$1" = "show" ]; then
     printf "\$MOCKED_GIT_DIFF"
+elif [ "\$1" = "config" ]; then
+    printf "main\n"
 fi
 exit 0
 EOF
