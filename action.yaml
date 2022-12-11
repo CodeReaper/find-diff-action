@@ -52,6 +52,8 @@ runs:
       run: |
         # script:
 
+        set -x
+
         [ -d ".git" ] || { printf '::error title=.git not found.::Did you forget to check out?\n'; exit 1; }
         case "$GITHUB_EVENT_NAME" in
           pull_request|pull_request_target)
