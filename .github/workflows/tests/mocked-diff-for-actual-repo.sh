@@ -14,6 +14,21 @@ export MOCKED_GIT_DIFF=' .devcontainer/Dockerfile             |  4 ++++
  12 files changed, 266 insertions(+), 1 deletion(-)
 '
 
-sh "$1" >/dev/null
+sh "$1" >/dev/null || {
+    printf 'Did not exit cleanly.\n'
+    exit 1
+}
 
-cat "$GITHUB_OUTPUT" # FIXME: actual asserts and more tests
+printf 'list<<hashhashhash
+action.yaml
+LICENSE
+test.sh
+hashhashhash
+pattern=^action.yaml|^LICENSE|^test.sh
+' >"$TMP/expected"
+
+diff -q "$TMP/expected" "$GITHUB_OUTPUT" || {
+    echo "Unexpected difference:"
+    diff "$TMP/expected" "$GITHUB_OUTPUT"
+    exit 1
+}

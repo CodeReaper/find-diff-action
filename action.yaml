@@ -26,9 +26,6 @@ inputs:
   maximumDepth:
     description: Matches requires less or equal to this depth to be included.
 
-  exclusionRegex:
-    description: Regex(s) to exclude matches found. Semicolon separated regexs. Defaults to excluding nothing.
-
 outputs:
   pattern:
     description: A egrep-style pattern consisting of all matches
@@ -48,7 +45,6 @@ runs:
         TYPE: ${{ inputs.type }}
         MINDEPTH: ${{ inputs.minimumDepth }}
         MAXDEPTH: ${{ inputs.maximumDepth }}
-        REGEX: ${{ inputs.exclusionRegex }}
       run: |
         # script:
 
