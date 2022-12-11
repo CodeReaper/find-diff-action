@@ -16,6 +16,11 @@ exit 0
 EOF
 chmod +x $BIN/git
 
+cat <<EOF >$BIN/md5sum
+echo 'hashhashhash'
+EOF
+chmod +x $BIN/md5sum
+
 export PATH="$BIN:$PATH"
 
 export GITHUB_EVENT_PATH="$HUB/event.json"
