@@ -60,6 +60,24 @@ The action produces both a list of relevant changes and a pattern for these chan
     maximumDepth: 3
 ```
 
+# Outputs
+
+The action outputs two variables, one is a plain new line separated list of changes, the other a regular expression that can match everything on the list of changes.
+
+## Sample for `list`
+
+```
+.github/workflows/tests
+action.yaml
+LICENSE
+```
+
+## Sample for `pattern`
+
+```
+^.github/workflows/tests|^action.yaml|^LICENSE
+```
+
 # License
 
 The scripts and documentation in this project are released under the [MIT License](LICENSE)
