@@ -49,7 +49,7 @@ The action produces both a list of relevant changes and a pattern for these chan
     type: files
 ```
 
-## List all folders containing changes matching classes/*/*
+## List all folders containing changes matching classes/\*/\*
 
 ```yaml
 - uses: CodeReaper/find-diff-action@v1
