@@ -95,7 +95,12 @@ runs:
         fi
         FIND=$FIND"! -path \"./.git/*\" "
 
+        printf '::notice title=Executing::%s\n' "$FIND"
         SEARCH=$(sh -c "$FIND -exec printf '^%s|' {} \;" | sed 's/|$//g')
+
+        echo '::group::Raw search'
+        printf '%s\n' "$SEARCH"
+        echo '::endgroup::'
 
         LIST=$(printf '%s' "$DIFF" | grep '|' | sed 's/^ *//g' | grep -oE "$SEARCH" | sort -u)
         PATTERN=$(printf '%s' "$LIST" | xargs -r printf '^%s|' | sed 's/|$//g')
