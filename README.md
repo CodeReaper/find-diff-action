@@ -1,4 +1,4 @@
-[![Build and Test](https://github.com/codereaper/find-diff-action/actions/workflows/test.yml/badge.svg)](https://github.com/codereaper/find-diff-action/actions/workflows/test.yml)
+[![Build and Test](https://github.com/codereaper/find-diff-action/actions/workflows/test.yaml/badge.svg)](https://github.com/codereaper/find-diff-action/actions/workflows/test.yaml)
 
 # find-diff-action
 
