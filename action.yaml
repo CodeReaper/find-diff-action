@@ -101,11 +101,7 @@ runs:
         fi
         FIND=$FIND"! -path \"./.git/*\" "
 
-        printgroup Searches "$FIND"
-
         SEARCH=$(sh -c "$FIND -exec printf '^%s|' {} \;" | sed 's/|$//g')
-
-        printgroup Regex "$SEARCH"
 
         printgroup Changes "$CHANGES"
 
