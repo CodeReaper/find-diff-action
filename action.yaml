@@ -55,22 +55,22 @@ runs:
             git fetch origin "$GITHUB_BASE_REF" "$GITHUB_HEAD_REF"
             git checkout "$GITHUB_BASE_REF"
             git checkout -
-            DIFF=$(git diff --stat=10000 "$GITHUB_BASE_REF")
+            CHANGES=$(git diff --stat=10000 "$GITHUB_BASE_REF")
             ;;
           push)
             git fetch origin "$GITHUB_REF"
-            DIFF=$(git show --stat=10000 --pretty=oneline "$GITHUB_REF")
+            CHANGES=$(git show --stat=10000 --pretty=oneline "$GITHUB_REF")
             ;;
           workflow_dispatch)
             DEFAULT=$(jq -r '.repository.default_branch' "$GITHUB_EVENT_PATH")
             if [ "$DEFAULT" = "$GITHUB_REF_NAME" ]; then
               git fetch origin "$GITHUB_REF"
-              DIFF=$(git show --stat=10000 --pretty=oneline "$GITHUB_REF")
+              CHANGES=$(git show --stat=10000 --pretty=oneline "$GITHUB_REF")
             else # assuming all workflow dispatches not run on default branch should be diffed against the default branch
               git fetch origin "$DEFAULT" "$GITHUB_REF"
               git checkout "$DEFAULT"
               git checkout -
-              DIFF=$(git diff --stat=10000 "$DEFAULT")
+              CHANGES=$(git diff --stat=10000 "$DEFAULT")
             fi
             ;;
           *)
@@ -95,15 +95,27 @@ runs:
         fi
         FIND=$FIND"! -path \"./.git/*\" "
 
-        printf '::notice title=Executing::%s\n' "$FIND"
+        printf 'Searching:\n%s\n' "$FIND"
         SEARCH=$(sh -c "$FIND -exec printf '^%s|' {} \;" | sed 's/|$//g')
 
-        echo '::group::Raw search'
+        echo '::group::Search matches'
         printf '%s\n' "$SEARCH"
         echo '::endgroup::'
 
-        LIST=$(printf '%s' "$DIFF" | grep '|' | sed 's/^ *//g' | grep -oE "$SEARCH" | sort -u)
+        echo '::group::Changes'
+        printf '%s\n' "$CHANGES"
+        echo '::endgroup::'
+
+        LIST=$(printf '%s' "$CHANGES" | grep '|' | sed 's/^ *//g' | grep -oE "$SEARCH" | sort -u)
         PATTERN=$(printf '%s' "$LIST" | xargs -r printf '^%s|' | sed 's/|$//g')
+
+        echo '::group::Result - list'
+        printf '%s\n' "$LIST"
+        echo '::endgroup::'
+
+        echo '::group::Result - pattern'
+        printf '%s\n' "$PATTERN"
+        echo '::endgroup::'
 
         EOF=$(head -c 20 /dev/random | md5sum | head -c 32)
         {
