@@ -81,6 +81,12 @@ runs:
         esac
         echo '::endgroup::'
 
+        printgroup() {
+          printf '::group::%s\n' "$1"
+          printf '%s\n' "$2"
+          echo '::endgroup::'
+        }
+
         FIND="find $PATHS "
         if [ -n "$MINDEPTH" ]; then
           FIND=$FIND"-mindepth $((MINDEPTH)) "
@@ -95,27 +101,19 @@ runs:
         fi
         FIND=$FIND"! -path \"./.git/*\" "
 
-        printf 'Searching:\n%s\n' "$FIND"
+        printgroup Searches "$FIND"
+
         SEARCH=$(sh -c "$FIND -exec printf '^%s|' {} \;" | sed 's/|$//g')
 
-        echo '::group::Search matches'
-        printf '%s\n' "$SEARCH"
-        echo '::endgroup::'
+        printgroup Regex "$SEARCH"
 
-        echo '::group::Changes'
-        printf '%s\n' "$CHANGES"
-        echo '::endgroup::'
+        printgroup Changes "$CHANGES"
 
         LIST=$(printf '%s' "$CHANGES" | grep '|' | sed 's/^ *//g' | grep -oE "$SEARCH" | sort -u)
         PATTERN=$(printf '%s' "$LIST" | xargs -r printf '^%s|' | sed 's/|$//g')
 
-        echo '::group::Result - list'
-        printf '%s\n' "$LIST"
-        echo '::endgroup::'
-
-        echo '::group::Result - pattern'
-        printf '%s\n' "$PATTERN"
-        echo '::endgroup::'
+        printgroup "Result - list" "$LIST"
+        printgroup "Result - pattern" "$PATTERN"
 
         EOF=$(head -c 20 /dev/random | md5sum | head -c 32)
         {
