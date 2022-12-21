@@ -49,7 +49,7 @@ runs:
         # script:
 
         [ -d ".git" ] || { printf '::error title=.git not found.::Did you forget to check out?\n'; exit 1; }
-        echo '::group::Git output'
+        echo '::group::Verbose git output'
         case "$GITHUB_EVENT_NAME" in
           pull_request|pull_request_target)
             git fetch origin "$GITHUB_BASE_REF" "$GITHUB_HEAD_REF"
@@ -87,6 +87,8 @@ runs:
           echo '::endgroup::'
         }
 
+        printgroup Changes "$CHANGES"
+
         FIND="find $PATHS "
         if [ -n "$MINDEPTH" ]; then
           FIND=$FIND"-mindepth $((MINDEPTH)) "
@@ -103,15 +105,13 @@ runs:
 
         SEARCH=$(sh -c "$FIND -exec printf '^%s|' {} \;" | sed 's/|$//g')
 
-        printgroup Changes "$CHANGES"
-
-        printgroup SEARCH "$SEARCH"
+        printgroup "Resolved pattern" "$SEARCH"
 
         LIST=$(printf '%s' "$CHANGES" | grep '|' | sed 's/^ *//g' | (grep -oE "$SEARCH" || true) | sort -u)
-        PATTERN=$(printf '%s' "$LIST" | xargs -r printf '^%s|' | sed 's/|$//g')
-
         printgroup "Change list" "${LIST:-No changes matched.}"
-        printgroup "Change pattern" "${PATTERN}"
+
+        PATTERN=$(printf '%s' "$LIST" | xargs -r printf '^%s|' | sed 's/|$//g')
+        printgroup "Change pattern" "${PATTERN:-No changes matched.}"
 
         if [ -z "$LIST" ]; then
           printf 'list=\n' >> "$GITHUB_OUTPUT"
