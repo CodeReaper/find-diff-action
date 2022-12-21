@@ -111,7 +111,7 @@ runs:
         PATTERN=$(printf '%s' "$LIST" | xargs -r printf '^%s|' | sed 's/|$//g')
 
         printgroup "Change list" "${LIST:-No changes matched.}"
-        printgroup "Change pattern" "${PATTERN:}"
+        printgroup "Change pattern" "${PATTERN}"
 
         if [ -z "$LIST" ]; then
           printf 'list=\n' >> "$GITHUB_OUTPUT"
