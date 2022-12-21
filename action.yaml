@@ -111,6 +111,12 @@ runs:
         printgroup "Result - list" "$LIST"
         printgroup "Result - pattern" "$PATTERN"
 
+        if [ -z "$LIST" ]; then
+          printf 'list=\n' >> "$GITHUB_OUTPUT"
+          printf 'pattern=\n' >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+
         EOF=$(head -c 20 /dev/random | md5sum | head -c 32)
         {
           printf "list<<%s\n" "$EOF"
