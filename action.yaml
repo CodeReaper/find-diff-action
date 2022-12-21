@@ -106,7 +106,8 @@ runs:
         printgroup Changes "$CHANGES"
 
         printgroup SEARCH "$SEARCH"
-        set -x
+        printgroup SHELL "$(ps -p "$$"|tail -1|cut -d\  -f7-)"
+        # set -x
 
         LIST=$(printf '%s' "$CHANGES" | grep '|' | sed 's/^ *//g' | grep -oE "$SEARCH" | sort -u)
         PATTERN=$(printf '%s' "$LIST" | xargs -r printf '^%s|' | sed 's/|$//g')
