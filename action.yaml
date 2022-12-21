@@ -107,15 +107,10 @@ runs:
 
         printgroup SEARCH "$SEARCH"
         printgroup SHELL "$(ps -p "$$")"
-        set -x
-
-        printf '%s' "$CHANGES" >/dev/null
-
-        printf '%s' "$CHANGES" | grep '|' >/dev/null
 
         printf '%s' "$CHANGES" | grep '|' | sed 's/^ *//g' >/dev/null
 
-        printf '%s' "$CHANGES" | grep '|' | sed 's/^ *//g' | grep -oE "$SEARCH" >/dev/null
+        set -x
 
         printf '%s' "$CHANGES" | grep '|' | sed 's/^ *//g' | grep -oE "$SEARCH" | sort -u >/dev/null
 
