@@ -106,19 +106,12 @@ runs:
         printgroup Changes "$CHANGES"
 
         printgroup SEARCH "$SEARCH"
-        printgroup SHELL "$(ps -p "$$")"
 
-        printf '%s' "$CHANGES" | grep '|' | sed 's/^ *//g' >/dev/null
-
-        set -x
-
-        printf '%s' "$CHANGES" | grep '|' | sed 's/^ *//g' | grep -oE "$SEARCH" | sort -u >/dev/null
-
-        LIST=$(printf '%s' "$CHANGES" | grep '|' | sed 's/^ *//g' | grep -oE "$SEARCH" | sort -u)
+        LIST=$(printf '%s' "$CHANGES" | grep '|' | sed 's/^ *//g' | (grep -oE "$SEARCH" || true) | sort -u)
         PATTERN=$(printf '%s' "$LIST" | xargs -r printf '^%s|' | sed 's/|$//g')
 
-        printgroup "Result - list" "$LIST"
-        printgroup "Result - pattern" "$PATTERN"
+        printgroup "Change list" "${LIST:-No changes matched.}"
+        printgroup "Change pattern" "${PATTERN:}"
 
         if [ -z "$LIST" ]; then
           printf 'list=\n' >> "$GITHUB_OUTPUT"
