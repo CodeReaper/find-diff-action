@@ -46,5 +46,8 @@ export PATHS=\*
 export TYPE=both
 
 sh "$1" "$2"
+EXIT=$?
 
 rm -rf "$BIN" "$HUB" "$TMP"
+
+exit $EXIT
