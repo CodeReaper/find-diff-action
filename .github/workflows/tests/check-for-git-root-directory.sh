@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eo pipefail
+set -e
 
 ACTION=$(readlink -fem "$1")
 REPO="$TMP/fake-repo"

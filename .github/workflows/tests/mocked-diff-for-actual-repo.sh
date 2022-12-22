@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eo pipefail
+set -e
 
 export GITHUB_EVENT_NAME=push
 export MOCKED_GIT_DIFF=' .devcontainer/Dockerfile             |  4 ++++
