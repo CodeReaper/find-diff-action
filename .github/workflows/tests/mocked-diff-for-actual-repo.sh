@@ -19,13 +19,11 @@ sh "$1" >/dev/null || {
     exit 1
 }
 
-printf 'list<<hashhashhash
-action.yaml
-LICENSE
-test.sh
-hashhashhash
-pattern=^action.yaml|^LICENSE|^test.sh
-' >"$TMP/expected"
+{
+    printf 'list<<hashhashhash\n'
+    printf "action.yaml\nLICENSE\ntest.sh" | sort
+    printf 'hashhashhash\npattern=^action.yaml|^LICENSE|^test.sh\n'
+} >"$TMP/expected"
 
 diff -q "$TMP/expected" "$GITHUB_OUTPUT" || {
     echo "Unexpected difference:"
