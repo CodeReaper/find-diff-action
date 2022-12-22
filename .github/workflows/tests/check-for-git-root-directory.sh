@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 ACTION=$(readlink -fem "$1")
 REPO="$TMP/fake-repo"
 mkdir "$REPO"

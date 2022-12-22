@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 export GITHUB_EVENT_NAME=push
 export MOCKED_GIT_DIFF=' .devcontainer/Dockerfile             |  4 ++++
  .devcontainer/devcontainer.json      | 17 +++++++++++++++++
@@ -19,13 +21,14 @@ sh "$1" >/dev/null || {
     exit 1
 }
 
-printf 'list<<hashhashhash
-action.yaml
-LICENSE
-test.sh
-hashhashhash
-pattern=^action.yaml|^LICENSE|^test.sh
-' >"$TMP/expected"
+sequence=$(printf "action.yaml\nLICENSE\ntest.sh" | sort)
+{
+    printf 'list<<hashhashhash\n'
+    echo "$sequence"
+    printf 'hashhashhash\npattern=^'
+    printf "%s" "$sequence" | tr '\n' ' ' | sed 's/ /|^/g'
+    printf "\n"
+} >"$TMP/expected"
 
 diff -q "$TMP/expected" "$GITHUB_OUTPUT" || {
     echo "Unexpected difference:"

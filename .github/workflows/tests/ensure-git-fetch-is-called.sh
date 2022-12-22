@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 for event in push workflow_dispatch pull_request pull_request_target; do
     export GITHUB_EVENT_NAME="$event"
     sh "$1" >>"$TMP/output" || {

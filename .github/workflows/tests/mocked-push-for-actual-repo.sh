@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 export GITHUB_EVENT_NAME=push
 export MOCKED_GIT_DIFF='e01d0b4c792d72cc96107b20b024db628fbc354d (HEAD -> main, origin/main, origin/HEAD) Commit message
  LICENSE   | 21 +++++++
@@ -11,12 +13,14 @@ sh "$1" >/dev/null || {
     exit 1
 }
 
-printf 'list<<hashhashhash
-LICENSE
-README.md
-hashhashhash
-pattern=^LICENSE|^README.md
-' >"$TMP/expected"
+sequence=$(printf "LICENSE\nREADME.md" | sort)
+{
+    printf 'list<<hashhashhash\n'
+    echo "$sequence"
+    printf 'hashhashhash\npattern=^'
+    printf "%s" "$sequence" | tr '\n' ' ' | sed 's/ /|^/g'
+    printf "\n"
+} >"$TMP/expected"
 
 diff -q "$TMP/expected" "$GITHUB_OUTPUT" || {
     echo "Unexpected difference:"

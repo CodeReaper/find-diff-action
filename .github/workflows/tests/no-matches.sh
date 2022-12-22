@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 export GITHUB_EVENT_NAME=pull_request
 export MOCKED_GIT_DIFF='   .github/workflows/does-not-exist.yml | 38 +++++++++++++-------------------------
    .github/workflows/does-not-exist.yml | 38 +++++++++++++-------------------------

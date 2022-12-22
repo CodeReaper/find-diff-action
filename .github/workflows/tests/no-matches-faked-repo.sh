@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 export PATHS=stuff
 export TYPE=directories
 export MINDEPTH=1
