@@ -10,6 +10,8 @@ The action produces both a list of relevant changes and a pattern for these chan
 
 # Usage
 
+> This action requires [full checkout with full history](https://github.com/actions/checkout#Fetch-all-history-for-all-tags-and-branches).
+
 ## List all changes
 
 ```yaml
