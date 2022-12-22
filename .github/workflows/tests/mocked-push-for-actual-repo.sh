@@ -11,12 +11,14 @@ sh "$1" >/dev/null || {
     exit 1
 }
 
-printf 'list<<hashhashhash
-LICENSE
-README.md
-hashhashhash
-pattern=^LICENSE|^README.md
-' >"$TMP/expected"
+sequence=$(printf "LICENSE\nREADME.md" | sort)
+{
+    printf 'list<<hashhashhash\n'
+    echo "$sequence"
+    printf 'hashhashhash\npattern=^'
+    printf "%s" "$sequence" | tr '\n' ' ' | sed 's/ /|^/g'
+    printf "\n"
+} >"$TMP/expected"
 
 diff -q "$TMP/expected" "$GITHUB_OUTPUT" || {
     echo "Unexpected difference:"

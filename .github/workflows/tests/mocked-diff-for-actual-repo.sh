@@ -19,10 +19,13 @@ sh "$1" >/dev/null || {
     exit 1
 }
 
+sequence=$(printf "action.yaml\nLICENSE\ntest.sh" | sort)
 {
     printf 'list<<hashhashhash\n'
-    printf "action.yaml\nLICENSE\ntest.sh" | sort
-    printf 'hashhashhash\npattern=^action.yaml|^LICENSE|^test.sh\n'
+    echo "$sequence"
+    printf 'hashhashhash\npattern=^'
+    printf "%s" "$sequence" | tr '\n' ' ' | sed 's/ /|^/g'
+    printf "\n"
 } >"$TMP/expected"
 
 diff -q "$TMP/expected" "$GITHUB_OUTPUT" || {
