@@ -8,23 +8,8 @@ branding:
 
 inputs:
   paths:
-    description: Path(s) to limit the search to. Space separated list. Defaults to git root.
-    default: "*"
-
-  type:
-    description: Types to search for. Defaults to both files and directories.
-    type: choice
-    options:
-      - files
-      - directories
-      - both
-    default: both
-
-  minimumDepth:
-    description: Matches requires this depth to be included.
-
-  maximumDepth:
-    description: Matches requires less or equal to this depth to be included.
+    description: Search path(s) to limit the search to. Space separated list. Defaults to 'everything'.
+    default: "**"
 
 outputs:
   pattern:
@@ -42,9 +27,6 @@ runs:
       shell: bash
       env:
         PATHS: ${{ inputs.paths }}
-        TYPE: ${{ inputs.type }}
-        MINDEPTH: ${{ inputs.minimumDepth }}
-        MAXDEPTH: ${{ inputs.maximumDepth }}
       run: |
         # script:
 
@@ -89,25 +71,22 @@ runs:
 
         printgroup Changes "$CHANGES"
 
-        FIND="find $PATHS "
-        if [ -n "$MINDEPTH" ]; then
-          FIND=$FIND"-mindepth $((MINDEPTH)) "
-        fi
-        if [ -n "$MAXDEPTH" ]; then
-          FIND=$FIND"-maxdepth $((MAXDEPTH)) "
-        fi
-        if [ "$TYPE" = "files" ]; then
-          FIND=$FIND"-type f "
-        elif [ "$TYPE" = "directories" ]; then
-          FIND=$FIND"-type d "
-        fi
-        FIND=$FIND"! -path \"./.git/*\" "
+        SUBSTITUTIONS='
+        s|/|\\/|g;
+        s|\.|\\.|g;
+        s|([^*])\*([^*])|\1[^/]+\2|g;
+        s|^\*([^*])|[^/]+\1|g;
+        s|([^*])\*$|\1[^/]+|g;
+        s|^\*$|[^/]+|g;
+        s|\*\*|.*|g;
+        s/ /|^/g;
+        '
 
-        SEARCH=$(sh -c "$FIND -exec printf '^%s|' {} \;" | sed 's/|$//g')
+        SEARCH=^$(echo "$PATHS" | sed -E "$SUBSTITUTIONS")
 
-        printgroup "Resolved pattern" "$SEARCH"
+        printgroup "Applied pattern" "$SEARCH"
 
-        LIST=$(printf '%s' "$CHANGES" | grep '|' | sed 's/^ *//g' | (grep -oE "$SEARCH" || true) | sort -u)
+        LIST=$(printf '%s' "$CHANGES" | grep '|' | sed -E 's/^ *//g; s/(.*)\s\|.*/\1/g; s/\s*$//g' | (grep -oE "$SEARCH" || true) | sort -u)
         printgroup "Change list" "${LIST:-No changes matched.}"
 
         PATTERN=$(printf '%s' "$LIST" | xargs -r printf '^%s|' | sed 's/|$//g')
@@ -124,6 +103,5 @@ runs:
           printf "list<<%s\n" "$EOF"
           printf "%s\n" "$LIST"
           printf "%s\n" "$EOF"
+          printf "pattern=%s\n" "$PATTERN"
         } >> "$GITHUB_OUTPUT"
-
-        printf "pattern=%s\n" "$PATTERN" >> "$GITHUB_OUTPUT"

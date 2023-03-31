@@ -42,8 +42,7 @@ touch "$GITHUB_OUTPUT"
 export TMP="$TMP"
 export BIN="$BIN"
 
-export PATHS=\*
-export TYPE=both
+export PATHS=\*\*
 
 sh "$1" "$2"
 EXIT=$?

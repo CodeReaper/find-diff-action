@@ -15,13 +15,13 @@ The action produces both a list of relevant changes and a pattern for these chan
 ## List all changes
 
 ```yaml
-- uses: CodeReaper/find-diff-action@v1
+- uses: CodeReaper/find-diff-action@v2
 ```
 
-## List all changes, but ignore toplevel files
+## List all changes in all top level folders
 
 ```yaml
-- uses: CodeReaper/find-diff-action@v1
+- uses: CodeReaper/find-diff-action@v2
   with:
     paths: */
 ```
@@ -29,37 +29,33 @@ The action produces both a list of relevant changes and a pattern for these chan
 ## List all changes in src and doc folders
 
 ```yaml
-- uses: CodeReaper/find-diff-action@v1
+- uses: CodeReaper/find-diff-action@v2
   with:
     paths: src doc
 ```
 
-## List all folders containing changes in src and doc folders
+## List all subfolders with changes in src and doc folders
 
 ```yaml
-- uses: CodeReaper/find-diff-action@v1
+- uses: CodeReaper/find-diff-action@v2
   with:
-    paths: src doc
-    type: directories
+    paths: src/**/ doc/**/
 ```
 
 ## List all changed files
 
 ```yaml
-- uses: CodeReaper/find-diff-action@v1
+- uses: CodeReaper/find-diff-action@v2
   with:
-    type: files
+    paths: **/*.*
 ```
 
-## List all folders containing changes matching classes/\*/\*
+## List all subfolders with changes up two levels below classes folder
 
 ```yaml
-- uses: CodeReaper/find-diff-action@v1
+- uses: CodeReaper/find-diff-action@v2
   with:
-    paths: classes
-    type: directories
-    minimumDepth: 1
-    maximumDepth: 3
+    paths: classes/*/*/
 ```
 
 # Outputs
