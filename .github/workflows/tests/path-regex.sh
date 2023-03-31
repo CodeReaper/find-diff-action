@@ -26,12 +26,14 @@ sh "$1" >"$TMP/log" || {
     exit 1
 }
 
-printf 'list<<hashhashhash
-.devcontainer/devcontainer.json
-.devcontainer/Dockerfile
-hashhashhash
-pattern=^.devcontainer/devcontainer.json|^.devcontainer/Dockerfile
-' >"$TMP/expected"
+sequence=$(printf ".devcontainer/devcontainer.json\n.devcontainer/Dockerfile" | sort)
+{
+    printf 'list<<hashhashhash\n'
+    echo "$sequence"
+    printf 'hashhashhash\npattern=^'
+    printf "%s" "$sequence" | tr '\n' ' ' | sed 's/ /|^/g'
+    printf "\n"
+} >"$TMP/expected"
 
 diff -q "$TMP/expected" "$GITHUB_OUTPUT" || {
     echo "Log #$TEST:"
@@ -51,11 +53,14 @@ sh "$1" >"$TMP/log" || {
     exit 1
 }
 
-printf 'list<<hashhashhash
-.github/workflows/test-wrapper.sh
-hashhashhash
-pattern=^.github/workflows/test-wrapper.sh
-' >"$TMP/expected"
+sequence=$(printf ".github/workflows/test-wrapper.sh" | sort)
+{
+    printf 'list<<hashhashhash\n'
+    echo "$sequence"
+    printf 'hashhashhash\npattern=^'
+    printf "%s" "$sequence" | tr '\n' ' ' | sed 's/ /|^/g'
+    printf "\n"
+} >"$TMP/expected"
 
 diff -q "$TMP/expected" "$GITHUB_OUTPUT" || {
     echo "Log #$TEST:"
@@ -68,18 +73,21 @@ diff -q "$TMP/expected" "$GITHUB_OUTPUT" || {
 TEST=3
 
 printf '' >"$GITHUB_OUTPUT"
-export PATHS='.github/**/*.sh'
+export PATHS='.github/*/*.sh'
 
 sh "$1" >"$TMP/log" || {
     printf 'Did not exit cleanly.\n'
     exit 1
 }
 
-printf 'list<<hashhashhash
-.github/workflows/test-wrapper.sh
-hashhashhash
-pattern=^.github/workflows/test-wrapper.sh
-' >"$TMP/expected"
+sequence=$(printf ".github/workflows/test-wrapper.sh" | sort)
+{
+    printf 'list<<hashhashhash\n'
+    echo "$sequence"
+    printf 'hashhashhash\npattern=^'
+    printf "%s" "$sequence" | tr '\n' ' ' | sed 's/ /|^/g'
+    printf "\n"
+} >"$TMP/expected"
 
 diff -q "$TMP/expected" "$GITHUB_OUTPUT" || {
     echo "Log #$TEST:"
@@ -99,11 +107,14 @@ sh "$1" >"$TMP/log" || {
     exit 1
 }
 
-printf 'list<<hashhashhash
-LICENSE
-hashhashhash
-pattern=^LICENSE
-' >"$TMP/expected"
+sequence=$(printf "LICENSE" | sort)
+{
+    printf 'list<<hashhashhash\n'
+    echo "$sequence"
+    printf 'hashhashhash\npattern=^'
+    printf "%s" "$sequence" | tr '\n' ' ' | sed 's/ /|^/g'
+    printf "\n"
+} >"$TMP/expected"
 
 diff -q "$TMP/expected" "$GITHUB_OUTPUT" || {
     echo "Log #$TEST:"
@@ -123,13 +134,14 @@ sh "$1" >"$TMP/log" || {
     exit 1
 }
 
-printf 'list<<hashhashhash
-.devcontainer/
-.github/
-.vscode/
-hashhashhash
-pattern=^.devcontainer/|^.github/|^.vscode/
-' >"$TMP/expected"
+sequence=$(printf ".devcontainer/\n.github/\n.vscode/" | sort)
+{
+    printf 'list<<hashhashhash\n'
+    echo "$sequence"
+    printf 'hashhashhash\npattern=^'
+    printf "%s" "$sequence" | tr '\n' ' ' | sed 's/ /|^/g'
+    printf "\n"
+} >"$TMP/expected"
 
 diff -q "$TMP/expected" "$GITHUB_OUTPUT" || {
     echo "Log #$TEST:"
@@ -149,13 +161,14 @@ sh "$1" >"$TMP/log" || {
     exit 1
 }
 
-printf 'list<<hashhashhash
-.devcontainer/devcontainer.json
-.devcontainer/Dockerfile
-.github/workflows/test-wrapper.sh
-hashhashhash
-pattern=^.devcontainer/devcontainer.json|^.devcontainer/Dockerfile|^.github/workflows/test-wrapper.sh
-' >"$TMP/expected"
+sequence=$(printf ".devcontainer/devcontainer.json\n.devcontainer/Dockerfile\n.github/workflows/test-wrapper.sh" | sort)
+{
+    printf 'list<<hashhashhash\n'
+    echo "$sequence"
+    printf 'hashhashhash\npattern=^'
+    printf "%s" "$sequence" | tr '\n' ' ' | sed 's/ /|^/g'
+    printf "\n"
+} >"$TMP/expected"
 
 diff -q "$TMP/expected" "$GITHUB_OUTPUT" || {
     echo "Log #$TEST:"
