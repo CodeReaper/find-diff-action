@@ -1,5 +1,5 @@
 {
-    "name": "Ubuntu",
+    "name": "find-diff action",
     "build": {
         "dockerfile": "Dockerfile"
     },
@@ -11,7 +11,10 @@
                 "foxundermoon.shell-format",
                 "redhat.vscode-yaml",
                 "ms-azuretools.vscode-docker"
-            ]
+            ],
+            "settings": {
+                "editor.formatOnSave": true
+            }
         }
     }
 }
