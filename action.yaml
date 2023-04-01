@@ -32,6 +32,7 @@ runs:
 
         [ -d ".git" ] || { printf '::error title=.git not found.::Did you forget to check out?\n'; exit 1; }
         echo '::group::Verbose git output'
+        git config advice.detachedHead false
         case "$GITHUB_EVENT_NAME" in
           pull_request|pull_request_target)
             git fetch origin "$GITHUB_BASE_REF" "$GITHUB_HEAD_REF"
