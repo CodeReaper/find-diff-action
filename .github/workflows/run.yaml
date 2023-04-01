@@ -1,7 +1,12 @@
 name: Run
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      paths:
+        description: The paths to use
+        required: true
+        default: **
   pull_request: {}
   push:
     branches:
@@ -14,19 +19,19 @@ jobs:
     steps:
       - name: Env
         shell: bash
-        run: |
-          env
+        run: env
 
       - name: Event
         shell: bash
-        run: |
-          cat "$GITHUB_EVENT_PATH"
+        run: cat "$GITHUB_EVENT_PATH"
 
       - uses: actions/checkout@v3
 
       - name: Action
-        uses: ./
         id: run
+        uses: ./
+        with:
+          paths: ${{ github.event.inputs.target }}
 
       - name: Outputs
         shell: bash

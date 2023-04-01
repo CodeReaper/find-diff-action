@@ -9,7 +9,7 @@ branding:
 inputs:
   paths:
     description: Search path(s) to limit the search to. Space separated list. Defaults to 'everything'.
-    default: "**"
+    default: **
 
 outputs:
   pattern:
