@@ -31,7 +31,7 @@ jobs:
         id: run
         uses: ./
         with:
-          paths: ${{ github.event.inputs.target }}
+          paths: ${{ github.event.inputs.paths }}
 
       - name: Outputs
         shell: bash
