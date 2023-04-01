@@ -12,3 +12,5 @@ find .github/workflows/tests -type f -name '*.sh' -exec sh -c '
       exit 1
     fi
   done' sh {} +
+
+ec

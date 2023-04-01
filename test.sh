@@ -16,3 +16,5 @@ printf "Testing %s ...\n" "$(basename "$file" ".sh")"
 if ! sh .github/workflows/test-wrapper.sh "$file" /tmp/run.sh; then
   exit 1
 fi
+
+ec

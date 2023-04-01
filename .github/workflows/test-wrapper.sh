@@ -25,6 +25,12 @@ echo 'hashhashhash'
 EOF
 chmod +x $BIN/md5sum
 
+BASE=$(dirname "$0")/tests/git-outputs
+cat <<EOF >$BIN/mock-data
+cat "$BASE/\$1.git"
+EOF
+chmod +x $BIN/mock-data
+
 export PATH="$BIN:$PATH"
 
 export GITHUB_EVENT_PATH="$HUB/event.json"
