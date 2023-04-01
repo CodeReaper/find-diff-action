@@ -6,7 +6,7 @@ on:
       paths:
         description: The paths to use
         required: true
-        default: **
+        default: "**"
   pull_request: {}
   push:
     branches:
