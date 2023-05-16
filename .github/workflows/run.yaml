@@ -39,3 +39,4 @@ jobs:
           # Outputs:
           printf 'Pattern:\n${{ steps.run.outputs.pattern }}\n'
           printf '\nList:\n---\n${{ steps.run.outputs.list }}\n'
+          printf '\nMatches:\n---\n${{ steps.run.outputs.matches }}\n'

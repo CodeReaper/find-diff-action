@@ -97,6 +97,7 @@ runs:
         printgroup "Change pattern" "${PATTERN:-No changes matched.}"
 
         if [ -z "$LIST" ]; then
+          echo "No matches found".
           {
             printf 'list=\n'
             printf 'pattern=\n'
@@ -105,6 +106,7 @@ runs:
           exit 0
         fi
 
+        echo "Matches found".
         EOF=$(head -c 20 /dev/random | md5sum | head -c 32)
         {
           printf "list<<%s\n" "$EOF"
