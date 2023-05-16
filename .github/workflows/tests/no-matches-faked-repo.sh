@@ -23,6 +23,7 @@ bash "$ACTION" >/dev/null || {
 
 printf 'list=
 pattern=
+matches=false
 ' >"$TMP/expected"
 
 diff -q "$TMP/expected" "$GITHUB_OUTPUT" || {

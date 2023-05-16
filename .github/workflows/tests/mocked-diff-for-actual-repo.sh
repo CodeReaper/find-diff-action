@@ -19,6 +19,7 @@ sequence=$(printf "action.yaml\ntest.sh" | sort)
   printf 'hashhashhash\npattern=^'
   printf "%s" "$sequence" | tr '\n' ' ' | sed 's/ /|^/g'
   printf "\n"
+  printf "matches=true\n"
 } >"$TMP/expected"
 
 diff -q "$TMP/expected" "$GITHUB_OUTPUT" || {
