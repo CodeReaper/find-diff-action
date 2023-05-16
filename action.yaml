@@ -20,7 +20,7 @@ outputs:
     value: ${{ steps.diff.outputs.list }}
   matches:
     description: A boolean value to indicate if there was at least one match.
-    value: ${{ steps.diff.outputs.list }}
+    value: ${{ steps.diff.outputs.matches }}
 
 runs:
   using: composite
