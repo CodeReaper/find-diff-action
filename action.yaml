@@ -18,6 +18,9 @@ outputs:
   list:
     description: A list of all matches
     value: ${{ steps.diff.outputs.list }}
+  matches:
+    description: A boolean value to indicate if there was at least one match.
+    value: ${{ steps.diff.outputs.matches }}
 
 runs:
   using: composite
@@ -94,15 +97,21 @@ runs:
         printgroup "Change pattern" "${PATTERN:-No changes matched.}"
 
         if [ -z "$LIST" ]; then
-          printf 'list=\n' >> "$GITHUB_OUTPUT"
-          printf 'pattern=\n' >> "$GITHUB_OUTPUT"
+          echo "No matches found".
+          {
+            printf 'list=\n'
+            printf 'pattern=\n'
+            printf 'matches=false\n'
+          } >> "$GITHUB_OUTPUT"
           exit 0
         fi
 
+        echo "Matches found".
         EOF=$(head -c 20 /dev/random | md5sum | head -c 32)
         {
           printf "list<<%s\n" "$EOF"
           printf "%s\n" "$LIST"
           printf "%s\n" "$EOF"
           printf "pattern=%s\n" "$PATTERN"
+          printf 'matches=true\n' >> "$GITHUB_OUTPUT"
         } >> "$GITHUB_OUTPUT"

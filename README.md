@@ -60,7 +60,7 @@ The action produces both a list of relevant changes and a pattern for these chan
 
 # Outputs
 
-The action outputs two variables, one is a plain new line separated list of changes, the other a regular expression that can match everything on the list of changes.
+The action outputs three variables, one is a plain new line separated list of changes, the second a regular expression that can match everything on the list of changes and the third is a boolean indication of if there was any matches.
 
 ## Sample for `list`
 
@@ -74,6 +74,12 @@ LICENSE
 
 ```
 ^.github/workflows/tests|^action.yaml|^LICENSE
+```
+
+## Sample for `matches`
+
+```
+true
 ```
 
 # License
