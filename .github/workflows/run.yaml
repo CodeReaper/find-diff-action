@@ -25,6 +25,8 @@ jobs:
         shell: bash
         run: cat "$GITHUB_EVENT_PATH"
 
+      - uses: actions/checkout@v3
+
       - name: Action
         id: run
         uses: ./
