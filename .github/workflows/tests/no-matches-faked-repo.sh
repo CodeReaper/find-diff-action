@@ -4,8 +4,8 @@ set -e
 
 export PATHS=stuff
 export GITHUB_EVENT_NAME=pull_request
-MOCKED_GIT_DIFF="$(mock-data pull-request-does-not-exist)"
-export MOCKED_GIT_DIFF
+MOCKED_DATA_DIFF="$(mock-data pull-request-does-not-exist)"
+export MOCKED_DATA_DIFF
 
 ACTION=$(readlink -fem "$1")
 REPO="$TMP/fake-repo"
