@@ -1,0 +1,8 @@
+[
+    {
+        "filename": ".github/workflows/does-not-exist.yml"
+    },
+    {
+        "filename": ".github/workflows/does-not-exist.yml"
+    }
+]

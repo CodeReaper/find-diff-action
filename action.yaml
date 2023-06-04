@@ -32,15 +32,17 @@ runs:
         PATHS: ${{ inputs.paths }}
         GH_TOKEN: ${{ github.token }}
       run: |
-        echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
-        echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
-        echo "GITHUB_REF: $GITHUB_REF"
-        echo "GITHUB_REF_NAME: $GITHUB_REF_NAME"
-        echo "DEFAULT_BRANCH: $(jq -r '.repository.default_branch' "$GITHUB_EVENT_PATH" || "N/A")"
+        echo "Configuration:"
+        echo "  GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+        echo "  GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
+        echo "  GITHUB_REF: $GITHUB_REF"
+        echo "  GITHUB_REF_NAME: $GITHUB_REF_NAME"
+        echo "  GITHUB_DEFAULT_BRANCH: $(jq -r '.repository.default_branch' "$GITHUB_EVENT_PATH" || "N/A")"
 
         case "$GITHUB_EVENT_NAME" in
           pull_request|pull_request_target)
-            CHANGES=$(gh api "/repos/$GITHUB_REPOSITORY/compare/$DEFAULT...$GITHUB_REF" | jq -r '.files[].filename')
+            PR=$(jq -r '.pull_request.number' "$GITHUB_EVENT_PATH")
+            CHANGES=$(gh api "/repos/$GITHUB_REPOSITORY/pulls/$PR/files" | jq -r '.[].filename')
             ;;
           push)
             CHANGES=$(gh api "/repos/$GITHUB_REPOSITORY/commits/$GITHUB_REF" | jq -r '.files[].filename')

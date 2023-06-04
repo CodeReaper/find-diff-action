@@ -4,19 +4,12 @@ set -e
 
 export PATHS=stuff
 export GITHUB_EVENT_NAME=pull_request
-MOCKED_DATA_DIFF="$(mock-data pull-request-does-not-exist)"
+MOCKED_DATA_DIFF="$(mock-data pull-request)"
 export MOCKED_DATA_DIFF
 
 ACTION=$(readlink -fem "$1")
-REPO="$TMP/fake-repo"
-mkdir "$REPO"
-cd "$REPO" || exit 2
 
-mkdir -p "$REPO/.git"
-mkdir -p "$REPO/stuff/one"
-mkdir -p "$REPO/stuff/two"
-
-bash "$ACTION" >/dev/null || {
+sh "$ACTION" >/dev/null || {
   printf 'Did not exit cleanly.\n'
   exit 1
 }
