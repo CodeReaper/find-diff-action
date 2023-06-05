@@ -44,16 +44,16 @@ runs:
 
         case "$GITHUB_EVENT_NAME" in
           pull_request|pull_request_target)
-            CHANGES=$(gh api "/repos/$GITHUB_REPOSITORY/pulls/$GITHUB_PR_NUMBER/files" | jq -r '.[].filename')
+            CHANGES=$(gh api --paginate "/repos/$GITHUB_REPOSITORY/pulls/$GITHUB_PR_NUMBER/files" | jq -r '.[].filename')
             ;;
           push)
-            CHANGES=$(gh api "/repos/$GITHUB_REPOSITORY/commits/$GITHUB_REF" | jq -r '.files[].filename')
+            CHANGES=$(gh api --paginate "/repos/$GITHUB_REPOSITORY/commits/$GITHUB_REF" | jq -r '.files // [] | .[].filename')
             ;;
           workflow_dispatch)
             if [ "$GITHUB_DEFAULT_BRANCH" = "$GITHUB_REF_NAME" ]; then
-              CHANGES=$(gh api "/repos/$GITHUB_REPOSITORY/commits/$GITHUB_REF" | jq -r '.files[].filename')
+              CHANGES=$(gh api --paginate "/repos/$GITHUB_REPOSITORY/commits/$GITHUB_REF" | jq -r '.files // [] | .[].filename')
             else # assuming all workflow dispatches not run on default branch should be diffed against the default branch
-              CHANGES=$(gh api "/repos/$GITHUB_REPOSITORY/compare/$GITHUB_DEFAULT_BRANCH...$GITHUB_REF" | jq -r '.files[].filename')
+              CHANGES=$(gh api --paginate "/repos/$GITHUB_REPOSITORY/compare/$GITHUB_DEFAULT_BRANCH...$GITHUB_REF" | jq -r '.files // [] | .[].filename')
             fi
             ;;
           *)
