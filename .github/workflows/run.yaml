@@ -31,7 +31,7 @@ jobs:
         id: run
         uses: ./
         with:
-          paths: ${{ inputs.paths }}
+          paths: ${{ inputs.paths || "**" }}
 
       - name: Outputs
         shell: bash
