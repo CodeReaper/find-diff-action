@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 printf '#!/bin/bash\n' >/tmp/run.sh
 yq '.runs[].0.run' <action.yaml >>/tmp/run.sh
 chmod +x /tmp/run.sh

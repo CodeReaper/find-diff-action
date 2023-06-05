@@ -8,30 +8,27 @@ mkdir -p "$BIN"
 mkdir -p "$HUB"
 mkdir -p "$TMP"
 
-cat <<EOF >$BIN/git
-if [ "\$1" = "diff" ]; then
-    printf "\$MOCKED_GIT_DIFF"
-elif [ "\$1" = "show" ]; then
-    printf "\$MOCKED_GIT_DIFF"
-elif [ "\$1" = "fetch" ]; then
-    printf "fetch\n"
-fi
+cat <<EOF >$BIN/gh
+printf "\$MOCKED_DATA_DIFF"
 exit 0
 EOF
-chmod +x $BIN/git
+chmod +x $BIN/gh
 
 cat <<EOF >$BIN/md5sum
 echo 'hashhashhash'
 EOF
 chmod +x $BIN/md5sum
 
-BASE=$(dirname "$0")/tests/git-outputs
+BASE=$(dirname "$0")/tests/outputs
 cat <<EOF >$BIN/mock-data
-cat "$BASE/\$1.git"
+cat "$BASE/\$1.json"
 EOF
 chmod +x $BIN/mock-data
 
 export PATH="$BIN:$PATH"
+
+export GITHUB_REPOSITORY="CodeReaper/fictitious-repo"
+export GITHUB_REF="main"
 
 export GITHUB_EVENT_PATH="$HUB/event.json"
 cat <<EOF >$GITHUB_EVENT_PATH

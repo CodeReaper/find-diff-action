@@ -30,42 +30,37 @@ runs:
       shell: bash
       env:
         PATHS: ${{ inputs.paths }}
+        GH_TOKEN: ${{ github.token }}
       run: |
-        # script:
+        echo "Configuration:"
+        GITHUB_PR_NUMBER=$(jq -r '.pull_request.number' "$GITHUB_EVENT_PATH" || "N/A")
+        GITHUB_DEFAULT_BRANCH=$(jq -r '.repository.default_branch' "$GITHUB_EVENT_PATH" || "N/A")
+        echo "  GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+        echo "  GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
+        echo "  GITHUB_REF: $GITHUB_REF"
+        echo "  GITHUB_REF_NAME: $GITHUB_REF_NAME"
+        echo "  GITHUB_PR_NUMBER: $GITHUB_PR_NUMBER"
+        echo "  GITHUB_DEFAULT_BRANCH: $GITHUB_DEFAULT_BRANCH"
 
-        [ -d ".git" ] || { printf '::error title=.git not found.::Did you forget to check out?\n'; exit 1; }
-        echo '::group::Verbose git output'
-        git config advice.detachedHead false
         case "$GITHUB_EVENT_NAME" in
           pull_request|pull_request_target)
-            git fetch origin "$GITHUB_BASE_REF" "$GITHUB_HEAD_REF"
-            git checkout "$GITHUB_BASE_REF"
-            git checkout -
-            CHANGES=$(git diff --stat=10000 "$GITHUB_BASE_REF")
+            CHANGES=$(gh api --paginate "/repos/$GITHUB_REPOSITORY/pulls/$GITHUB_PR_NUMBER/files" | jq -r '.[].filename')
             ;;
           push)
-            git fetch origin "$GITHUB_REF"
-            CHANGES=$(git show --stat=10000 --pretty=oneline "$GITHUB_REF")
+            CHANGES=$(gh api --paginate "/repos/$GITHUB_REPOSITORY/commits/$GITHUB_REF" | jq -r '.files // [] | .[].filename')
             ;;
           workflow_dispatch)
-            DEFAULT=$(jq -r '.repository.default_branch' "$GITHUB_EVENT_PATH")
-            if [ "$DEFAULT" = "$GITHUB_REF_NAME" ]; then
-              git fetch origin "$GITHUB_REF"
-              CHANGES=$(git show --stat=10000 --pretty=oneline "$GITHUB_REF")
+            if [ "$GITHUB_DEFAULT_BRANCH" = "$GITHUB_REF_NAME" ]; then
+              CHANGES=$(gh api --paginate "/repos/$GITHUB_REPOSITORY/commits/$GITHUB_REF" | jq -r '.files // [] | .[].filename')
             else # assuming all workflow dispatches not run on default branch should be diffed against the default branch
-              git fetch origin "$DEFAULT" "$GITHUB_REF"
-              git checkout "$DEFAULT"
-              git checkout -
-              CHANGES=$(git diff --stat=10000 "$DEFAULT")
+              CHANGES=$(gh api --paginate "/repos/$GITHUB_REPOSITORY/compare/$GITHUB_DEFAULT_BRANCH...$GITHUB_REF" | jq -r '.files // [] | .[].filename')
             fi
             ;;
           *)
-            echo '::endgroup::'
             printf '::error title=Invalid event::Event %s is not supported.\n' "$GITHUB_EVENT_NAME"
             exit 1
             ;;
         esac
-        echo '::endgroup::'
 
         printgroup() {
           printf '::group::%s\n' "$1"
@@ -90,7 +85,7 @@ runs:
 
         printgroup "Applied pattern" "$SEARCH"
 
-        LIST=$(printf '%s' "$CHANGES" | grep '|' | sed -E 's/^ *//g; s/(.*)\s\|.*/\1/g; s/\s*$//g' | (grep -oE "$SEARCH" || true) | sort -u)
+        LIST=$(printf '%s' "$CHANGES" | (grep -oE "$SEARCH" || true) | sort -u)
         printgroup "Change list" "${LIST:-No changes matched.}"
 
         PATTERN=$(printf '%s' "$LIST" | xargs -r printf '^%s|' | sed 's/|$//g')

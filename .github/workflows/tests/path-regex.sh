@@ -3,8 +3,8 @@
 set -e
 
 export GITHUB_EVENT_NAME=push
-MOCKED_GIT_DIFF="$(mock-data diff)"
-export MOCKED_GIT_DIFF
+MOCKED_DATA_DIFF="$(mock-data diff)"
+export MOCKED_DATA_DIFF
 
 export TEST_SCRIPT="$1"
 hit_test() {

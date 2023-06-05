@@ -10,18 +10,16 @@ The action produces both a list of relevant changes and a pattern for these chan
 
 # Usage
 
-> This action requires [full checkout with full history](https://github.com/actions/checkout#Fetch-all-history-for-all-tags-and-branches).
-
 ## List all changes
 
 ```yaml
-- uses: CodeReaper/find-diff-action@v2
+- uses: CodeReaper/find-diff-action@v3
 ```
 
 ## List all changes in all top level folders
 
 ```yaml
-- uses: CodeReaper/find-diff-action@v2
+- uses: CodeReaper/find-diff-action@v3
   with:
     paths: */
 ```
@@ -29,7 +27,7 @@ The action produces both a list of relevant changes and a pattern for these chan
 ## List all changes in src and doc folders
 
 ```yaml
-- uses: CodeReaper/find-diff-action@v2
+- uses: CodeReaper/find-diff-action@v3
   with:
     paths: src doc
 ```
@@ -37,7 +35,7 @@ The action produces both a list of relevant changes and a pattern for these chan
 ## List all subfolders with changes in src and doc folders
 
 ```yaml
-- uses: CodeReaper/find-diff-action@v2
+- uses: CodeReaper/find-diff-action@v3
   with:
     paths: src/**/ doc/**/
 ```
@@ -45,7 +43,7 @@ The action produces both a list of relevant changes and a pattern for these chan
 ## List all changed files
 
 ```yaml
-- uses: CodeReaper/find-diff-action@v2
+- uses: CodeReaper/find-diff-action@v3
   with:
     paths: **/*.*
 ```
@@ -53,7 +51,7 @@ The action produces both a list of relevant changes and a pattern for these chan
 ## List all subfolders with changes up two levels below classes folder
 
 ```yaml
-- uses: CodeReaper/find-diff-action@v2
+- uses: CodeReaper/find-diff-action@v3
   with:
     paths: classes/*/*/
 ```

@@ -4,8 +4,8 @@ set -e
 
 export PATHS='*.*'
 export GITHUB_EVENT_NAME=push
-MOCKED_GIT_DIFF="$(mock-data diff)"
-export MOCKED_GIT_DIFF
+MOCKED_DATA_DIFF="$(mock-data diff)"
+export MOCKED_DATA_DIFF
 
 sh "$1" >"$TMP/log" || {
   printf 'Did not exit cleanly.\n'

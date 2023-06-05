@@ -3,8 +3,8 @@
 set -e
 
 export GITHUB_EVENT_NAME=push
-MOCKED_GIT_DIFF="$(mock-data push)"
-export MOCKED_GIT_DIFF
+MOCKED_DATA_DIFF="$(mock-data push)"
+export MOCKED_DATA_DIFF
 
 sh "$1" >/dev/null || {
   printf 'Did not exit cleanly.\n'

@@ -1,0 +1,34 @@
+{
+    "files": [
+        {
+            "filename": ".devcontainer/Dockerfile"
+        },
+        {
+            "filename": ".devcontainer/devcontainer.json"
+        },
+        {
+            "filename": ".github/workflows/test-wrapper.sh"
+        },
+        {
+            "filename": ".github/workflows/test.yaml"
+        },
+        {
+            "filename": ".gitignore"
+        },
+        {
+            "filename": ".vscode/extensions.json"
+        },
+        {
+            "filename": ".vscode/settings.json"
+        },
+        {
+            "filename": "LICENSE"
+        },
+        {
+            "filename": "action.yaml"
+        },
+        {
+            "filename": "test.sh"
+        }
+    ]
+}
